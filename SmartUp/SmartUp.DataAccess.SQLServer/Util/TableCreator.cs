@@ -2,6 +2,7 @@
 using SmartUp.DataAccess.SQLServer.Util;
 using System.Data;
 using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SmartUp.DataAccess.SQLServer.Dao
 {
@@ -49,7 +50,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 infix varchar(5),
                 mentor varchar(32),
                 totalCredits int,
-                totalCreditsFromP int,
                 class varchar(32),
                 PRIMARY KEY (id),
                 FOREIGN KEY (mentor) REFERENCES teacher(id)
@@ -110,7 +110,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                 [name] varchar(64),
                 abbreviation varchar(10),
                 [description] TEXT NOT NULL,
-                requiredCreditsFromP int DEFAULT 0,
                 PRIMARY KEY(name)
             );
         END;"
@@ -174,10 +173,27 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             CREATE TABLE registrationSemester (
                 studentId varchar(32),
                 semesterName varchar(64),
-                PRIMARY KEY(studentId, semesterName)
+                PRIMARY KEY(studentId, semesterName),
+                FOREIGN KEY(studentId) REFERENCES student(id),
+                FOREIGN KEY(semesterName) REFERENCES semester([name])
             );
         END;"
             );
+            CreateTableIfNotExists("SemesterCriteriaPercentage",
+@"
+        IF OBJECT_ID('SemesterCriteriaPercentage', 'U') IS NULL
+        BEGIN
+            CREATE TABLE  semesterCriteriaPercentage(
+                SemesterName varchar(64),
+                RequiredSemesterName varchar(64),
+		        RequiredPrecentage int,
+                PRIMARY KEY(SemesterName, RequiredSemesterName),
+		        FOREIGN KEY(SemesterName) REFERENCES semester([name]),
+		        FOREIGN KEY(RequiredSemesterName) REFERENCES semester([name])
+            );
+        END;"
+);
+
         }
 
         private static void CreateTableIfNotExists(string tableName, string query)
@@ -217,6 +233,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             //SemesterCriteriaDao.GetInstance().FillTable();
             //SemesterCourseDao.GetInstance().FillTable();
             //SemesterRegistrationDao.GetInstance().FillTable();
+            //SemesterCriteriaPercentageDao.GetInstance().FillTable();
         }
 
         private static void ExecuteNonQuery(string query, SqlConnection connection)

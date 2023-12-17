@@ -46,8 +46,8 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                         string lastName = NameGenerator.GenerateRandomName();
                         string studentId = $"S{totalStudents.ToString($"D{6}")}";
                         string mentorId = mentors[random.Next(mentors.Count)];
-                        string insertQuery = "INSERT INTO student (id, firstName, infix, lastName, mentor, totalCredits, totalCreditsFromP, class) " +
-                                             "VALUES (@Id, @FirstName, @Infix, @LastName, @Mentor, @TotalCredits, @TotalCreditsFromP, @Class);";
+                        string insertQuery = "INSERT INTO student (id, firstName, infix, lastName, mentor, totalCredits, class) " +
+                                             "VALUES (@Id, @FirstName, @Infix, @LastName, @Mentor, @TotalCredits, @Class);";
 
                         using (SqlCommand command = new SqlCommand(insertQuery, con))
                         {
@@ -57,7 +57,6 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                             command.Parameters.AddWithValue("@LastName", lastName);
                             command.Parameters.AddWithValue("@Mentor", mentorId);
                             command.Parameters.AddWithValue("@TotalCredits", 0);
-                            command.Parameters.AddWithValue("@TotalCreditsFromP", 0);
                             command.Parameters.AddWithValue("@Class", className);
                             command.ExecuteNonQuery();
                         }
@@ -112,38 +111,38 @@ namespace SmartUp.DataAccess.SQLServer.Dao
             return studentIds;
         }
 
-        public int GetCreditsFromPByStudentID(string studentID)
-        {
-            int creditsFromP = 0;
-            String query = "SELECT totalCreditsFromP FROM student WHERE id = @StudentID;";
-            using (SqlConnection? connection = DatabaseConnection.GetConnection())
-            {
-                try
-                {
-                    if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@StudentID", studentID);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                int id = Int32.Parse(reader["totalCreditsFromP"].ToString());
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-                finally
-                {
-                    DatabaseConnection.CloseConnection(connection);
-                }
-            }
-            return creditsFromP;
-        }
+        //public int GetCreditsFromPByStudentID(string studentID)
+        //{
+        //    int creditsFromP = 0;
+        //    String query = "SELECT totalCreditsFromP FROM student WHERE id = @StudentID;";
+        //    using (SqlConnection? connection = DatabaseConnection.GetConnection())
+        //    {
+        //        try
+        //        {
+        //            if (connection.State != System.Data.ConnectionState.Open) { connection.Open(); };
+        //            using (SqlCommand command = new SqlCommand(query, connection))
+        //            {
+        //                command.Parameters.AddWithValue("@StudentID", studentID);
+        //                using (SqlDataReader reader = command.ExecuteReader())
+        //                {
+        //                    while (reader.Read())
+        //                    {
+        //                        int id = Int32.Parse(reader["totalCreditsFromP"].ToString());
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Debug.WriteLine($"Error in method {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+        //        }
+        //        finally
+        //        {
+        //            DatabaseConnection.CloseConnection(connection);
+        //        }
+        //    }
+        //    return creditsFromP;
+        //}
         public List<Student> GetStudentNameByMentor(string mentor)
         {
             List<Student> Students = new List<Student>();

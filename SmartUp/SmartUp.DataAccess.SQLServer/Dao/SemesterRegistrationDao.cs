@@ -41,7 +41,7 @@ namespace SmartUp.DataAccess.SQLServer.Dao
                         }
                     }
                 }
-                while (studentCounter < totalStudents)
+                while (studentCounter <= totalStudents)
                 {
                     string query = "INSERT INTO registrationSemester (studentId, semesterName) " +
                      "VALUES (@Id, @semesterName1); " +

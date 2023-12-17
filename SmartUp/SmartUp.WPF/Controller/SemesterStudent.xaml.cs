@@ -17,7 +17,7 @@ namespace SmartUp.UI
 {
     public partial class SemesterStudent : Page
     {
-        private int CreditsFromP = StudentDao.GetInstance().GetCreditsFromPByStudentID(Constants.STUDENT_ID);
+        //private int CreditsFromP = StudentDao.GetInstance().GetCreditsFromPByStudentID(Constants.STUDENT_ID);
         private static Semester? SelectedSemester { get; set; }
 
         public SemesterStudent()
@@ -152,7 +152,7 @@ namespace SmartUp.UI
             SelectedSemester = semester;
             SemesterName.Text = semester.Name;
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append($"EC nodig van propedeuse: {semester.RequiredCreditsFromP}\n\n");
+            //stringBuilder.Append($"EC nodig van propedeuse: {semester.RequiredCreditsFromP}\n\n");
 
             List<SemesterCourse> CriteriaCourses = SemesterCriteriaDao.GetInstance().GetSemesterCriteriaBySemester(semester);
             List<string> CoursesInSemster = SemesterCourseDao.GetInstance().GetSemesterCoursesBySemesterName(semester.Name);
